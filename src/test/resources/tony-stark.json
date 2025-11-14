@@ -1,0 +1,54 @@
+{
+	"status": "ACTIVE",
+	"username": "tstark",
+	"manager": {
+		"self": "/persons/cd81ca9a-f9a0-4e90-9f7d-e2c705eb66ed",
+		"_id": "cd81ca9a-f9a0-4e90-9f7d-e2c705eb66ed"
+	},
+	"password": "tstark",
+	"displayName": "Tony Stark",
+	"type": {
+		"_id": "",
+		"shortName": "Crime Fighter"
+	},
+	"_meta": {
+		"_createdBy": "FIXME",
+		"_createdDate": 1408749064620,
+		"_active": true,
+		"_schema": "persons",
+		"_version": 1408749064620
+	},
+	"givenName": "Tony",
+	"self": "/persons/9e7a6d56-3f19-4111-8d6f-340f21765d58",
+	"familyName": "Stark",
+	"setInitialMasterPassword": false,
+	"accountLocked": false,
+	"applications": {
+		"self": "/persons/9e7a6d56-3f19-4111-8d6f-340f21765d58/applications"
+	},
+	"workAddress": {
+		"city": "Flushing",
+		"_meta": {
+			"_createdBy": "FIXME",
+			"_createdDate": 1408749064623,
+			"_active": true,
+			"_schema": "addresses",
+			"_version": 1408749064623
+		},
+		"zip": "1111",
+		"country": "USA",
+		"self": "/addresses/f7741c3c-cc45-40db-9f79-12e08bac755f",
+		"state": "NY",
+		"street": "111 22th Rd",
+		"_id": "f7741c3c-cc45-40db-9f79-12e08bac755f"
+	},
+	"passwordGenerated": false,
+	"reports": {
+		"self": "/persons/9e7a6d56-3f19-4111-8d6f-340f21765d58/reports"
+	},
+	"manuallyLocked": false,
+	"_id": "9e7a6d56-3f19-4111-8d6f-340f21765d58",
+	"nickName": "tony",
+	"workEmail": "tstark@scuid.us",
+	"inviteStatus": "NOT_SENT"
+}
