@@ -1,0 +1,19 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+/target
+.DS_Store
+.classpath
+.project
+.settings
+.factorypath
+.metadata
+
+logback.xml
+.envrc
+.aider*
+.env
+.felix
