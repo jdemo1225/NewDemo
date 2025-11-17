@@ -1,0 +1,14 @@
+{
+	"condition": {
+		"eq": {"path": "$.type.shortName", "value": "Crime Fighter"}
+	},
+	"yield": {
+		"application": {
+			"_id": "google"
+		},
+		"quota": "1GB",
+		"groups": [
+			{"_id": "google-superheroes-group"}
+		]
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"condition": {
+		"and": [
+			{"eq": {"path": "$.type.shortName", "value": "Crime Fighter"}},
+			{"eq": {"path": "$.allegiance", "value": "Avengers"}}
+		]
+	},
+	"yield": {
+		"application": {
+			"_id": "google"
+		},
+		"quota": "1YB",
+		"groups": [
+			{"_id": "google-avengers-group"}
+		]
+	}
+}

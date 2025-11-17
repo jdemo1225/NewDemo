@@ -1,0 +1,17 @@
+{
+	"condition": {
+		"and": [
+			{"eq": {"path": "$.type.shortName", "value": "Crime Fighter"}},
+			{"eq": {"path": "$.universe", "value": "DC"}}
+		]
+	},
+	"yield": {
+		"application": {
+			"_id": "google"
+		},
+		"quota": "1TB",
+		"groups": [
+			{"_id": "google-dc-group"}
+		]
+	}
+}

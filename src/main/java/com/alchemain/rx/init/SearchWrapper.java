@@ -6,7 +6,7 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.action.DocWriteResponse;
@@ -100,7 +100,7 @@ public class SearchWrapper implements Constants {
                     .execute().actionGet();
         }
 
-        if (response.getHits().getTotalHits() != 1) {
+        if (response.getHits().getTotalHits().value != 1) {
             throw new Exception(String.format("Multiple matches found for an exact match query! field: %s, query: %s",
                     field, query));
         }
@@ -120,7 +120,7 @@ public class SearchWrapper implements Constants {
         ObjectNode pagingInfo = pagedResponse.putObject(PAGING);
         pagingInfo.put(OFFSET, offset);
         pagingInfo.put(LIMIT, limit);
-        pagingInfo.put(TOTAL_COUNT, matches.getHits().getTotalHits());
+        pagingInfo.put(TOTAL_COUNT, matches.getHits().getTotalHits().value);
         ArrayNode responseData = pagedResponse.putArray(DATA);
 
         Iterator<SearchHit> hit_it = matches.getHits().iterator();

@@ -1,0 +1,16 @@
+{
+	"condition": {
+		"and": [
+			{"eq": {"path": "$.type.shortName", "value": "Crime Fighter"}},
+			{"eq": {"path": "$.job", "value": "Business"}}
+		]
+	},
+	"yield": {
+		"application": {
+			"_id": "salesforce"
+		},
+		"groups": [
+			{"_id": "salesforce-tycoons-group"}
+		]
+	}
+}

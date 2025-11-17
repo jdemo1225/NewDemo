@@ -1,0 +1,15 @@
+{
+     "givenName": "Bruce",
+     "familyName": "Wayne",
+     "userName": "bwayne",
+     "type": {
+     	"_id": "",
+     	"shortName": "Crime Fighter"
+     },
+     "allegiance": "Justice League",
+     "job": "Business",
+     "universe": "DC",
+     "_meta": {
+     	"_version": 1405451394276
+     }
+}

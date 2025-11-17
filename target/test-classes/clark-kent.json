@@ -1,0 +1,15 @@
+{
+     "givenName": "Clark",
+     "familyName": "Kent",
+     "userName": "ckent",
+     "type": {
+     	"_id": "",
+     	"shortName": "Crime Fighter"
+     },
+     "allegiance": "Justice League",
+     "job": "Reporter",
+     "universe": "DC",
+     "_meta": {
+     	"_version": 1405451394276
+     }
+}

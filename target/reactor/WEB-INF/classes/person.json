@@ -1,0 +1,27 @@
+{
+    "familyName": "Rodriguez",
+    "givenName": "Irene",
+    "displayName": "Rodriguez, Irene",
+    "accountLocked": false,
+    "status": "active",
+    "active": true,
+    "userName": "E168931",
+    "userType": {
+        "id": "870"
+    },
+    "employeeNumber": "168931",
+    "manager": {
+        "id": "86142"
+    },
+    "phoneNumbers": [
+        {
+            "type": "work",
+            "value": "212-111-3333"
+        },
+        {
+            "type": "mobile",
+            "value": "212-333-5555"
+        }
+    ],
+    "title": "Sr Customer Agent"
+}
