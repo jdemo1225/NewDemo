@@ -13,7 +13,7 @@
 
 		<akka-version>2.3.2</akka-version>
 		<codec-version>1.9</codec-version>
-		<es-version>5.6.15</es-version>
+		<es-version>7.17.25</es-version>
 		<groovy-version>2.1.8</groovy-version>
 		<guava-version>15.0</guava-version>
 		<guice-version>3.0</guice-version>
