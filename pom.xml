@@ -24,7 +24,7 @@
 		<json-patch-version>1.7</json-patch-version>
 		<jersey-version>1.17.1</jersey-version>
 		<junit-version>4.10</junit-version>
-		<logback-version>1.0.13</logback-version>
+		<logback-version>1.2.13</logback-version>
 		<slf4j-version>1.7.5</slf4j-version>
 		<mongo-driver-version>2.11.3</mongo-driver-version>
 	</properties>
