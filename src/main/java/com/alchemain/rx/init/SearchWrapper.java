@@ -6,7 +6,7 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.action.DocWriteResponse;
@@ -39,14 +39,15 @@ public class SearchWrapper implements Constants {
         // stringify it.
         String dataAsString = JsonProvider.INSTANCE.getMapper().writeValueAsString(data);
 
-        IndexResponse response = searchClient.prepareIndex(context.getTenant(), resource, _id).setSource(dataAsString, XContentType.JSON)
-                .execute().actionGet();
+        IndexResponse response = searchClient.prepareIndex(context.getTenant(), _id).setSource(dataAsString, XContentType.JSON)
+
+                        .execute().actionGet();
         return response.getId();
     }
 
     public Boolean deleteObject(ExecutionContext context, String resource, String _id) throws Exception {
 
-        DeleteResponse response = searchClient.prepareDelete(context.getTenant(), resource, _id).execute().actionGet();
+        DeleteResponse response = searchClient.prepareDelete(context.getTenant(), "_doc", _id).execute().actionGet();
         return response.getResult() == DocWriteResponse.Result.DELETED;
     }
 
@@ -68,9 +69,9 @@ public class SearchWrapper implements Constants {
         if (resource != null) {
             log.debug("Executing search query [{}] on tenant [{}] using type [{}]", query, context.getTenant(),
                     resource);
-            response = searchClient.prepareSearch(context.getTenant()).setTypes(resource)
-                    .setQuery(queryBuilder).addSort(DISPLAY_NAME, SortOrder.ASC)
-                    .setFrom(offset).setSize(limit).execute().actionGet();
+            response = searchClient.prepareSearch(context.getTenant())
+                                .setQuery(queryBuilder).addSort(DISPLAY_NAME, SortOrder.ASC)
+                                .setFrom(offset).setSize(limit).execute().actionGet();
         } else {
             log.debug("Executing search query [{}] on tenant [{}] with no specified type", query,
                     context.getTenant());
@@ -93,14 +94,14 @@ public class SearchWrapper implements Constants {
 
         SearchResponse response = null;
         if (resource != null) {
-            response = searchClient.prepareSearch(context.getTenant()).setTypes(resource)
-                    .setQuery(QueryBuilders.matchQuery(field, query)).execute().actionGet();
+            response = searchClient.prepareSearch(context.getTenant())
+                                .setQuery(QueryBuilders.matchQuery(field, query)).execute().actionGet();
         } else {
             response = searchClient.prepareSearch(context.getTenant()).setQuery(QueryBuilders.matchQuery(field, query))
                     .execute().actionGet();
         }
 
-        if (response.getHits().getTotalHits() != 1) {
+        if (response.getHits().getTotalHits().value != 1) {
             throw new Exception(String.format("Multiple matches found for an exact match query! field: %s, query: %s",
                     field, query));
         }
@@ -120,7 +121,7 @@ public class SearchWrapper implements Constants {
         ObjectNode pagingInfo = pagedResponse.putObject(PAGING);
         pagingInfo.put(OFFSET, offset);
         pagingInfo.put(LIMIT, limit);
-        pagingInfo.put(TOTAL_COUNT, matches.getHits().getTotalHits());
+        pagingInfo.put(TOTAL_COUNT, matches.getHits().getTotalHits().value);
         ArrayNode responseData = pagedResponse.putArray(DATA);
 
         Iterator<SearchHit> hit_it = matches.getHits().iterator();
