@@ -15,7 +15,7 @@
 		<codec-version>1.9</codec-version>
 		<es-version>5.6.15</es-version>
 		<groovy-version>2.1.8</groovy-version>
-		<guava-version>15.0</guava-version>
+		<guava-version>32.0.0-jre</guava-version>
 		<guice-version>3.0</guice-version>
 		<hc-fluent-version>4.3.4</hc-fluent-version>
 		<jackson-version>2.3.5</jackson-version>
