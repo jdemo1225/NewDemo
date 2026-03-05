@@ -1,12 +1,13 @@
 package com.alchemain.rx.init;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +44,8 @@ public class SearchModule extends AbstractModule {
         for (String host : hosts) {
             String[] constituents = host.split(":");
             try {
-                client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(constituents[0]), Integer.parseInt(constituents[1])));
-            } catch (UnknownHostException e) {
+                            client.addTransportAddress(new TransportAddress(new InetSocketAddress(InetAddress.getByName(constituents[0]), Integer.parseInt(constituents[1]))));
+                        } catch (UnknownHostException e) {
                 log.error("Failed to add transport address: {}", e.getMessage());
             }
         }
