@@ -18,7 +18,7 @@
 		<guava-version>15.0</guava-version>
 		<guice-version>3.0</guice-version>
 		<hc-fluent-version>4.3.4</hc-fluent-version>
-		<jackson-version>2.3.5</jackson-version>
+		<jackson-version>2.15.0</jackson-version>
 		<javassist-version>3.18.1-GA</javassist-version>
 		<jongo-version>1.0</jongo-version>
 		<json-patch-version>1.7</json-patch-version>
