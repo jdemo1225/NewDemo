@@ -1,13 +1,13 @@
 package com.alchemain.rx.init;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.apache.http.HttpHost;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,11 +25,11 @@ public class SearchModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Client.class).toInstance(esConnect());
+        bind(RestHighLevelClient.class).toInstance(esConnect());
         bind(SearchWrapper.class).in(Scopes.SINGLETON);
     }
 
-    public Client esConnect() {
+    public RestHighLevelClient esConnect() {
         String transportMethod = PropertiesUtil.string(CLIENT_METHOD);
         String clusterName = PropertiesUtil.string(CLUSTER_NAME);
         if (clusterName == null)
@@ -38,16 +38,18 @@ public class SearchModule extends AbstractModule {
         log.trace("Creating ES Client:  cluster = {}, transport = {}", clusterName, transportMethod);
 
         String[] hosts = PropertiesUtil.string(CLIENT_HOSTS).split(",");
-        Settings settings = Settings.builder().put("cluster.name", clusterName).build();
-        TransportClient client = new PreBuiltTransportClient(settings);
+        List<HttpHost> httpHosts = new ArrayList<>();
         for (String host : hosts) {
             String[] constituents = host.split(":");
             try {
-                client.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(constituents[0]), Integer.parseInt(constituents[1])));
-            } catch (UnknownHostException e) {
-                log.error("Failed to add transport address: {}", e.getMessage());
+                httpHosts.add(new HttpHost(constituents[0], Integer.parseInt(constituents[1]), "http"));
+            } catch (Exception e) {
+                log.error("Failed to parse host: {}", e.getMessage());
             }
         }
+        
+        RestClientBuilder builder = RestClient.builder(httpHosts.toArray(new HttpHost[0]));
+        RestHighLevelClient client = new RestHighLevelClient(builder);
         return client;
     }
 }
