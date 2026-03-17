@@ -2,19 +2,15 @@ package com.alchemain.rx.init;
 
 import java.util.Iterator;
 
-import org.elasticsearch.action.DocWriteResponse;
-import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +26,10 @@ import com.alchemain.rx.bus.JsonProvider;
 public class SearchWrapper implements Constants {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private RestHighLevelClient searchClient;
+    private Client searchClient;
 
     @Inject
-    public SearchWrapper(RestHighLevelClient searchClient) {
+    public SearchWrapper(Client searchClient) {
         this.searchClient = searchClient;
     }
 
@@ -43,19 +39,14 @@ public class SearchWrapper implements Constants {
         // stringify it.
         String dataAsString = JsonProvider.INSTANCE.getMapper().writeValueAsString(data);
 
-        IndexRequest request = new IndexRequest(context.getTenant())
-                .index(resource)
-                .id(_id)
-                .source(dataAsString, XContentType.JSON);
-        
-        IndexResponse response = searchClient.index(request);
+        IndexResponse response = searchClient.prepareIndex(context.getTenant(), resource, _id).setSource(dataAsString, XContentType.JSON)
+                .execute().actionGet();
         return response.getId();
     }
 
     public Boolean deleteObject(ExecutionContext context, String resource, String _id) throws Exception {
 
-        DeleteRequest request = new DeleteRequest(context.getTenant(), resource, _id);
-        DeleteResponse response = searchClient.delete(request);
+        DeleteResponse response = searchClient.prepareDelete(context.getTenant(), resource, _id).execute().actionGet();
         return response.getResult() == DocWriteResponse.Result.DELETED;
     }
 
@@ -74,25 +65,17 @@ public class SearchWrapper implements Constants {
 
         QueryBuilder queryBuilder = QueryBuilders.queryStringQuery(query);
 
-        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
-                .query(queryBuilder)
-                .from(offset)
-                .size(limit)
-                .sort(DISPLAY_NAME, SortOrder.ASC);
-
-        SearchRequest searchRequest = new SearchRequest(context.getTenant());
-        
         if (resource != null) {
             log.debug("Executing search query [{}] on tenant [{}] using type [{}]", query, context.getTenant(),
                     resource);
-            searchRequest.types(resource);
-            searchRequest.source(sourceBuilder);
-            response = searchClient.search(searchRequest);
+            response = searchClient.prepareSearch(context.getTenant()).setTypes(resource)
+                    .setQuery(queryBuilder).addSort(DISPLAY_NAME, SortOrder.ASC)
+                    .setFrom(offset).setSize(limit).execute().actionGet();
         } else {
             log.debug("Executing search query [{}] on tenant [{}] with no specified type", query,
                     context.getTenant());
-            searchRequest.source(sourceBuilder);
-            response = searchClient.search(searchRequest);
+            response = searchClient.prepareSearch(context.getTenant()).setQuery(queryBuilder)
+                    .addSort(DISPLAY_NAME, SortOrder.ASC).setFrom(offset).setSize(limit).execute().actionGet();
         }
 
         return generatePagedResponse(response, offset, limit);
@@ -109,19 +92,12 @@ public class SearchWrapper implements Constants {
             throws Exception {
 
         SearchResponse response = null;
-        
-        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
-                .query(QueryBuilders.matchQuery(field, query));
-        
-        SearchRequest searchRequest = new SearchRequest(context.getTenant());
-        
         if (resource != null) {
-            searchRequest.types(resource);
-            searchRequest.source(sourceBuilder);
-            response = searchClient.search(searchRequest);
+            response = searchClient.prepareSearch(context.getTenant()).setTypes(resource)
+                    .setQuery(QueryBuilders.matchQuery(field, query)).execute().actionGet();
         } else {
-            searchRequest.source(sourceBuilder);
-            response = searchClient.search(searchRequest);
+            response = searchClient.prepareSearch(context.getTenant()).setQuery(QueryBuilders.matchQuery(field, query))
+                    .execute().actionGet();
         }
 
         if (response.getHits().getTotalHits() != 1) {
